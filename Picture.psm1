@@ -1,33 +1,32 @@
 Function Save-InstagramPicture {
 <#
  .SYNOPSIS 
-    Save-InstagramPictures is a PowerShell function that saves pictures from Instagram onto the file system. 
- .PARAMETER URI
-    The URI to the instagram photo
+    Save-InstagramPictures is a PowerShell function that saves pictures displayed on the Instgram Profile from Instagram onto the file system.
+ .PARAMETER ID
+    The Instagram ID e.g. github 
+ .PARAMETER Index
+    Index of the photo displayed on the Instagram Profile Page
  .PARAMETER File
     Name of the downloaded picture. If this parameter is not set, a random file name will be generated.
  .EXAMPLE
-    Save-InstagramPicture -URI https://www.instagram.com/p/B8DoMiAhkPL/
+    Save-InstagramPicture -URI github -Index 1
 #>
     param (
         [parameter (Mandatory=$true)]
-        [string]$URI, 
+        [string]$ID, 
+        [parameter (Mandatory=$false)]
+        [int]$Index = 0,
         [parameter (Mandatory=$false)]
         [string]$File = [System.IO.Path]::GetRandomFileName() + '.jpg'
     )
 
     Write-Host 'Welcome to the instagram picture downloader!'
+    
+    $WebContent = Invoke-RestMethod  -Uri "https://www.instagram.com/$($ID)/?__a=1"
+    
+    $imageURI = $WebContent.graphql.user.edge_owner_to_timeline_media.edges[$index].node.display_url
 
-    $WebContent = Invoke-WebRequest -Uri $URI  -UseBasicParsing
-    $WebContentString = $WebContent.ToString()
-
-    [string]$start = '<meta property="og:image" content="'
-    [string]$end = '<meta property="og:description"'
-
-    [int]$startIndex = ($WebContentString | Select-String -Pattern $start -AllMatches).Matches.Index + $start.Length
-    [int]$endIndex = ($WebContentString | Select-String -Pattern $end -AllMatches).Matches.Index
-
-    $image = ($WebContentString.Substring($startIndex, ($endIndex - $startIndex)) -replace '" />' -replace '').Trim()
+    # Download Picture
     $directory = 'C:\Users\' + $Env:UserName + '\Pictures\'
     
     if(!(Test-Path -Path $directory )){
@@ -35,7 +34,7 @@ Function Save-InstagramPicture {
         exit
     }
 
-    Invoke-WebRequest -Uri $image -OutFile $directory$File
+    Invoke-WebRequest -Uri $imageURI -OutFile $directory$File
 
     Write-Host 'Image has been successfully saved to the Pictures folder with the name' $File  
     
