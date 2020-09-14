@@ -11,7 +11,7 @@ Function Read-SpecsaverLensesDeals {
     
     $req = Invoke-WebRequest -URI $specsavers -UseBasicParsing
 
-    $req.Images.alt | Where { $_ -like '*off*'  }
+    $req.Images.alt | Where-Object { $_ -like '*off*'  }
 }
 
 Export-ModuleMember -Function Read-SpecsaverLensesDeals -Alias 'Lenses'
