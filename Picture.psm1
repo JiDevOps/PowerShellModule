@@ -38,7 +38,7 @@ Function Save-InstagramPicture {
 
     Write-Host 'Image has been successfully saved to the Pictures folder with the name' $File  
     
-    ii $directory
+    Invoke-Item $directory
 }
 
 Export-ModuleMember -Function Save-InstagramPicture -Alias 'Insta'
