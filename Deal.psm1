@@ -1,9 +1,9 @@
 Function Read-SpecsaverLensesDeals {
 <#
  .SYNOPSIS 
-    Save-InstagramPictures is a PowerShell function that displays the daily deals on contact lenses.
+    Read-SpecsaverLensesDeals is a PowerShell function that displays the daily deals on contact lenses.
  .EXAMPLE
-    Save-InstagramPicture -URI github -Index 1
+    Read-SpecsaverLensesDeals
 #>
     Write-Host "Today's Specsaver Contact Lenses Deals are..."
     
